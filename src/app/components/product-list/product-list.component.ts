@@ -1,21 +1,31 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import {NgFor} from '@angular/common'
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ProductService } from '../../services/product.service';
+import { NgFor } from '@angular/common';
 
 @Component({
-  imports: [NgFor],
   selector: 'app-product-list',
+  imports: [NgFor],
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent {
-  @Output() cartUpdated = new EventEmitter<any>();
-  products = [
-    { name: 'Tomato', price: 1, quantity: 0 },
-    { name: 'Cucumber', price: 2, quantity: 0 }
-  ];
+  products: any[] = [];
+  @Output() cartUpdated = new EventEmitter<any[]>();
+
+  constructor(private productService: ProductService) {}
+
+  @Input() set category(category: string) {
+    if (category) {
+      this.productService
+        .getProductsByCategory(category)
+        .subscribe((products) => {
+          this.products = products.products;
+        });
+    }
+  }
 
   addToCart(product: any) {
-    product.quantity++;
+    product.quantity = (product.quantity || 0) + 1;
     this.cartUpdated.emit(this.products);
   }
 

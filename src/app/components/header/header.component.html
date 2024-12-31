@@ -1,9 +1,12 @@
 <div class="header">
-    <h1>Header</h1>
-    <div>
-      Category: 
-      <button>Fruits</button>
-      <button>Vegetables</button>
-    </div>
+  <h1>Header</h1>
+  <div>
+    Category:
+    <button
+      *ngFor="let category of categories"
+      (click)="selectCategory(category)"
+    >
+      {{ category }}
+    </button>
   </div>
-  
+</div>

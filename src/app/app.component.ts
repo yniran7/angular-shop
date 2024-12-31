@@ -1,27 +1,41 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { ProductListComponent } from './components/product-list/product-list.component';
 import { CartComponent } from './components/cart/cart.component';
-import { HttpClientModule } from '@angular/common/http';
+import { FooterComponent } from './components/footer/footer.component';
+import { HeaderComponent } from './components/header/header.component';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductService } from './services/product.service';
 
 @Component({
+  selector: 'app-root',
   imports: [
     HeaderComponent,
     FooterComponent,
     ProductListComponent,
     CartComponent,
-    HttpClientModule,
   ],
-  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  category: string = '';
   cart: any[] = [];
+  userId: string = 'yuval';
 
-  updateCart(products: any[]) {
-    this.cart = products.filter((p) => p.quantity > 0);
+  constructor(private productService: ProductService) {}
+
+  ngOnInit() {
+    this.productService.getCart(this.userId).subscribe((cart: any) => {
+      console.log(cart);
+      this.cart = cart?.['products'];
+    });
+  }
+
+  updateCategory(selectedCategory: string) {
+    this.category = selectedCategory;
+  }
+
+  updateCart(updatedProducts: any[]) {
+    this.cart = updatedProducts.filter((p) => p.quantity > 0);
   }
 
   getTotalProducts() {

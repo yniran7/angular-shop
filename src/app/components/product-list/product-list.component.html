@@ -1,10 +1,11 @@
 <div class="product-list">
-    <h2>Product List:</h2>
-    <div *ngFor="let product of products">
-      <button (click)="addToCart(product)">[ Add to cart ] {{ product.name }}</button>
-      <button (click)="increment(product)">[+] </button>
-      <button (click)="decrement(product)">[-] </button>
-      {{ product.price }}$
-    </div>
+  <h2>Product List:</h2>
+  <div *ngFor="let product of products">
+    <button (click)="addToCart(product)">
+      [ Add to cart ] {{ product.name }}
+    </button>
+    <button (click)="increment(product)">[+]</button>
+    <button (click)="decrement(product)">[-]</button>
+    {{ product.price }}$
   </div>
-  
+</div>
