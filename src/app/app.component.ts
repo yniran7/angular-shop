@@ -1,12 +1,30 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { CartComponent } from './components/cart/cart.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
+  imports: [
+    HeaderComponent,
+    FooterComponent,
+    ProductListComponent,
+    CartComponent,
+    HttpClientModule,
+  ],
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'veggie-store';
+  cart: any[] = [];
+
+  updateCart(products: any[]) {
+    this.cart = products.filter((p) => p.quantity > 0);
+  }
+
+  getTotalProducts() {
+    return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+  }
 }
