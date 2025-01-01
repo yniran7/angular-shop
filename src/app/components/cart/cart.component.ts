@@ -1,28 +1,52 @@
-import { Component, Input } from '@angular/core';
-import { ProductService } from '../../services/product.service';
 import { NgFor } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
+import { ProductService } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-cart',
-  imports: [NgFor],
+  imports: [
+    MatCardTitle,
+    MatCardHeader,
+    MatCardSubtitle,
+    MatCard,
+    MatCardContent,
+    MatCardActions,
+    NgFor,
+  ],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
+  displayedColumns: string[] = ['product', 'quantity', 'price', 'actions'];
+
   @Input() cart: any[] = [];
   @Input() userId: string = '';
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
 
-  getTotal() {
-    return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  ngOnInit() {
+    this.cartService.cart$.subscribe((cart) => {
+      this.cart = cart;
+    });
+  }
+  removeItem(item: any) {
+    this.cartService.removeFromCart(item);
   }
 
-  removeItem(item: any) {
-    const index = this.cart.indexOf(item);
-    if (index > -1) {
-      this.cart.splice(index, 1);
-    }
+  getTotal() {
+    return this.cartService.getTotal();
   }
 
   saveCart() {

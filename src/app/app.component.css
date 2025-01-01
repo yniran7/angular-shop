@@ -1,3 +1,22 @@
-.product-list {
-    list-style: none;
+.app-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+}
+
+.products-container {
+  flex: 2;
+  max-width: 65%;
+}
+
+.cart-container {
+  flex: 1;
+  max-width: 35%;
+  background: #f9f9f9;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

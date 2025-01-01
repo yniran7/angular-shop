@@ -4,11 +4,14 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductService } from './services/product.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { CartService } from './services/cart.service';
 
 @Component({
   selector: 'app-root',
   imports: [
     HeaderComponent,
+    MatToolbarModule,
     FooterComponent,
     ProductListComponent,
     CartComponent,
@@ -21,12 +24,12 @@ export class AppComponent {
   cart: any[] = [];
   userId: string = 'yuval';
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private cartService: CartService) {}
 
   ngOnInit() {
     this.productService.getCart(this.userId).subscribe((cart: any) => {
-      console.log(cart);
       this.cart = cart?.['products'];
+      this.cartService.addToCart(this.cart)
     });
   }
 

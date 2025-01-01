@@ -1,11 +1,22 @@
 <div class="product-list">
-  <h2>Product List:</h2>
-  <div *ngFor="let product of products">
-    <button (click)="addToCart(product)">
-      [ Add to cart ] {{ product.name }}
-    </button>
-    <button (click)="increment(product)">[+]</button>
-    <button (click)="decrement(product)">[-]</button>
-    {{ product.price }}$
-  </div>
+  <mat-card *ngFor="let product of products" class="product-card">
+    <mat-card-header>
+      <mat-card-title>{{ product.name }}</mat-card-title>
+      <mat-card-subtitle>{{ product.price }}$</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{ product.description || 'No description available' }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="addToCart(product)">
+        Add to Cart
+      </button>
+      <button mat-icon-button color="accent" (click)="increment(product)">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="decrement(product)">
+        <mat-icon>remove</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>

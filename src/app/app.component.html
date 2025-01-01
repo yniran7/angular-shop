@@ -1,9 +1,13 @@
 <app-header (categorySelected)="updateCategory($event)"></app-header>
-<div class="main-content">
-  <app-product-list
-    [category]="category"
-    (cartUpdated)="updateCart($event)"
-  ></app-product-list>
-  <app-cart [cart]="cart" [userId]="userId"></app-cart>
+<div class="app-layout">
+  <div class="products-container">
+    <app-product-list
+      [category]="category"
+      (cartUpdated)="updateCart($event)"
+    ></app-product-list>
+  </div>
+  <div class="cart-container">
+    <app-cart [cart]="cart" [userId]="userId"></app-cart>
+  </div>
 </div>
 <app-footer [totalProducts]="getTotalProducts()"></app-footer>

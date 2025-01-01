@@ -1,0 +1,9 @@
+.cart {
+  margin: 16px;
+}
+
+.total {
+  margin-top: 16px;
+  font-size: 1.2rem;
+  text-align: right;
+}

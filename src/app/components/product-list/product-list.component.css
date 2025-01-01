@@ -1,0 +1,12 @@
+.product-list {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  gap: 16px; /* Add space between the cards */
+  padding: 16px;
+}
+
+.product-card {
+  width: 100%; /* Make each card take up full width */
+  max-width: 600px; /* Optional: Set a max width for better readability */
+  margin: 0 auto; /* Center the cards horizontally */
+}
