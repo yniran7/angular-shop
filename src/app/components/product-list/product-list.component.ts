@@ -29,9 +29,11 @@ import { CartService } from '../../services/cart.service';
 })
 export class ProductListComponent {
   products: any[] = [];
-  @Output() cartUpdated = new EventEmitter<any[]>();
 
-  constructor(private productService: ProductService, private cartService: CartService) {}
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
 
   @Input() set category(category: string) {
     if (category) {
@@ -44,20 +46,14 @@ export class ProductListComponent {
   }
 
   addToCart(product: any) {
-    product.quantity = (product.quantity || 0) + 1;
-    // this.cartUpdated.emit(this.products);
     this.cartService.addToCart(product);
   }
 
   increment(product: any) {
-    product.quantity++;
-    this.cartUpdated.emit(this.products);
+    this.cartService.increment(product);
   }
 
   decrement(product: any) {
-    if (product.quantity > 0) {
-      product.quantity--;
-      this.cartUpdated.emit(this.products);
-    }
+    this.cartService.decrement(product);
   }
 }

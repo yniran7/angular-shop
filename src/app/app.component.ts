@@ -21,15 +21,18 @@ import { CartService } from './services/cart.service';
 })
 export class AppComponent {
   category: string = '';
-  cart: any[] = [];
   userId: string = 'yuval';
 
-  constructor(private productService: ProductService, private cartService: CartService) {}
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit() {
     this.productService.getCart(this.userId).subscribe((cart: any) => {
-      this.cart = cart?.['products'];
-      this.cartService.addToCart(this.cart)
+      cart?.products.forEach((product: any) => {
+        this.cartService.addToCart(product, product.quantity);
+      });
     });
   }
 
@@ -37,11 +40,7 @@ export class AppComponent {
     this.category = selectedCategory;
   }
 
-  updateCart(updatedProducts: any[]) {
-    this.cart = updatedProducts.filter((p) => p.quantity > 0);
-  }
-
   getTotalProducts() {
-    return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+    return this.cartService.getTotalProducts();
   }
 }

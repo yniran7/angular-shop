@@ -1,17 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IGetCartResponse } from '../interfaces/GetCartResponse';
 import { IGetCategoriesResponse } from '../interfaces/getCategoryResponse';
 import { IGetProductsByCategoryResponse } from '../interfaces/getProductsByCategoryResponse';
+import { IGetCartResponse } from '../interfaces/getCartResponse';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   private apiUrl = 'http://localhost:5000';
-
-  
 
   constructor(private http: HttpClient) {}
 

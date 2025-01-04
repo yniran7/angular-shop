@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Product } from '../../models/product';
 
 @Injectable({
   providedIn: 'root',
@@ -14,33 +15,33 @@ export class CartService {
     return this.cart.getValue();
   }
 
-  addToCart(product: any) {
+  addToCart(product: Product, quantity = 1) {
     const cart = this.getCart();
     const existingProduct = cart.find((item) => item.name === product.name);
 
     if (existingProduct) {
-      existingProduct.quantity++;
+      existingProduct.quantity += quantity;
     } else {
-      cart.push({ ...product, quantity: 1 });
+      cart.push({ ...product, quantity });
     }
 
-    this.cart.next(cart); // Notify all subscribers
+    this.cart.next(cart);
   }
 
-  removeFromCart(product: any) {
+  removeFromCart(product: Product): void {
     let cart = this.getCart();
     cart = cart.filter((item) => item.name !== product.name);
-    this.cart.next(cart); // Notify all subscribers
+    this.cart.next(cart);
   }
 
-  increment(product: any) {
+  increment(product: Product): void {
     const cart = this.getCart();
     const item = cart.find((p) => p.name === product.name);
     if (item) item.quantity++;
-    this.cart.next(cart); // Notify all subscribers
+    this.cart.next(cart);
   }
 
-  decrement(product: any) {
+  decrement(product: Product): void {
     const cart = this.getCart();
     const item = cart.find((p) => p.name === product.name);
     if (item && item.quantity > 1) {
@@ -48,10 +49,17 @@ export class CartService {
     } else if (item && item.quantity === 1) {
       this.removeFromCart(product);
     }
-    this.cart.next(cart); // Notify all subscribers
+    this.cart.next(cart);
   }
 
-  getTotal() {
-    return this.getCart().reduce((total, item) => total + item.price * item.quantity, 0);
+  getTotal(): number {
+    return this.getCart().reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  }
+
+  getTotalProducts(): number {
+    return this.getCart().reduce((sum, item) => sum + item.quantity, 0);
   }
 }
