@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ProductService } from '../../services/product.service';
+import { ProductService } from '../product-list/product.service';
 
 @Component({
   selector: 'app-header',

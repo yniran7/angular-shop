@@ -8,9 +8,9 @@ import {
 } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
-import { CartService } from '../../services/cart.service';
-import { ProductService } from '../../services/product.service';
-import { Product } from '../../../models/product';
+import { CartService } from '../cart/cart.service';
+import { ProductService } from './product.service';
+import { Product } from '../../models/product';
 
 @Component({
   selector: 'app-product-list',

@@ -7,8 +7,8 @@ import {
   MatCardSubtitle,
   MatCardTitle,
 } from '@angular/material/card';
-import { CartItem, CartService } from '../../services/cart.service';
-import { ProductService } from '../../services/product.service';
+import { CartItem, CartService } from './cart.service';
+import { ProductService } from '../product-list/product.service';
 
 @Component({
   selector: 'app-cart',
@@ -24,8 +24,6 @@ import { ProductService } from '../../services/product.service';
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent implements OnInit {
-  displayedColumns: string[] = ['product', 'quantity', 'price', 'actions'];
-
   cart = signal<CartItem[]>([]);
   @Input() userId: string = '';
 

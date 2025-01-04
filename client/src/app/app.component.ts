@@ -1,11 +1,11 @@
 import { Component, signal } from '@angular/core';
-import { CartComponent } from './components/cart/cart.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { HeaderComponent } from './components/header/header.component';
-import { ProductListComponent } from './components/product-list/product-list.component';
-import { ProductService } from './services/product.service';
+import { CartComponent } from './cart/cart.component';
+import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent } from './header/header.component';
+import { ProductListComponent } from './product-list/product-list.component';
+import { ProductService } from './product-list/product.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { CartService } from './services/cart.service';
+import { CartService } from './cart/cart.service';
 
 @Component({
   selector: 'app-root',
