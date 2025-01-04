@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CartComponent } from './components/cart/cart.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -20,8 +20,8 @@ import { CartService } from './services/cart.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  category: string = '';
-  userId: string = 'yuval';
+  category = signal<string>('');
+  userId = signal<string>('yuval');
 
   constructor(
     private productService: ProductService,
@@ -29,7 +29,7 @@ export class AppComponent {
   ) {}
 
   ngOnInit() {
-    this.productService.getCart(this.userId).subscribe((cart: any) => {
+    this.productService.getCart(this.userId()).subscribe((cart: any) => {
       cart?.products.forEach((product: any) => {
         this.cartService.addToCart(product, product.quantity);
       });
@@ -37,7 +37,7 @@ export class AppComponent {
   }
 
   updateCategory(selectedCategory: string) {
-    this.category = selectedCategory;
+    this.category.set(selectedCategory);
   }
 
   getTotalProducts() {

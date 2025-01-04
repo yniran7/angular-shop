@@ -1,5 +1,4 @@
-import { NgFor } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import {
   MatCard,
   MatCardActions,
@@ -8,8 +7,8 @@ import {
   MatCardSubtitle,
   MatCardTitle,
 } from '@angular/material/card';
+import { CartItem, CartService } from '../../services/cart.service';
 import { ProductService } from '../../services/product.service';
-import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -20,7 +19,6 @@ import { CartService } from '../../services/cart.service';
     MatCard,
     MatCardContent,
     MatCardActions,
-    NgFor,
   ],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
@@ -28,7 +26,7 @@ import { CartService } from '../../services/cart.service';
 export class CartComponent implements OnInit {
   displayedColumns: string[] = ['product', 'quantity', 'price', 'actions'];
 
-  @Input() cart: any[] = [];
+  cart = signal<CartItem[]>([]);
   @Input() userId: string = '';
 
   constructor(
@@ -37,8 +35,8 @@ export class CartComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.cartService.cart$.subscribe((cart) => {
-      this.cart = cart;
+    this.cartService.cart$.subscribe((cart: CartItem[]) => {
+      this.cart.set(cart);
     });
   }
   removeItem(item: any) {
@@ -50,8 +48,10 @@ export class CartComponent implements OnInit {
   }
 
   saveCart() {
-    this.productService.saveCart(this.cart, this.userId).subscribe(() => {
-      alert('Cart saved!');
-    });
+    this.productService
+      .saveCart(this.cartService.getCart(), this.userId)
+      .subscribe(() => {
+        alert('Cart saved!');
+      });
   }
 }

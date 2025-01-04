@@ -1,7 +1,8 @@
 <div class="cart">
   <h2>Shopping Cart</h2>
 
-  <div *ngFor="let item of cart" class="cart-item">
+  @for (item of cart(); track $index) {
+  <div class="cart-item">
     <mat-card>
       <mat-card-header>
         <mat-card-title>{{ item.name }}</mat-card-title>
@@ -21,6 +22,7 @@
       </mat-card-actions>
     </mat-card>
   </div>
+  }
 
   <div class="total"><strong>Total:</strong> {{ getTotal() }}$</div>
 

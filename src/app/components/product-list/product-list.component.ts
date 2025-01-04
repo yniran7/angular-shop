@@ -1,26 +1,25 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ProductService } from '../../services/product.service';
-import { NgFor } from '@angular/common';
+import { Component, HostListener, Input } from '@angular/core';
 import {
-  MatCardTitle,
+  MatCard,
+  MatCardActions,
   MatCardHeader,
   MatCardSubtitle,
-  MatCard,
-  MatCardContent,
-  MatCardActions,
+  MatCardTitle,
 } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
 import { CartService } from '../../services/cart.service';
+import { ProductService } from '../../services/product.service';
+import { Product } from '../../../models/product';
 
 @Component({
   selector: 'app-product-list',
   imports: [
-    NgFor,
+    MatProgressSpinner,
     MatCardTitle,
     MatCardHeader,
     MatCardSubtitle,
     MatCard,
-    MatCardContent,
     MatCardActions,
     MatIcon,
   ],
@@ -28,7 +27,12 @@ import { CartService } from '../../services/cart.service';
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent {
-  products: any[] = [];
+  products: Product[] = [];
+  page = 1;
+  pageSize = 5;
+  isLoading = false;
+  retrievedAllProducts = false;
+  _category = '';
 
   constructor(
     private productService: ProductService,
@@ -36,24 +40,62 @@ export class ProductListComponent {
   ) {}
 
   @Input() set category(category: string) {
-    if (category) {
-      this.productService
-        .getProductsByCategory(category)
-        .subscribe((products) => {
-          this.products = products.products;
-        });
+    if (category && category != this.category) {
+      this.page = 1;
+      this.products = [];
+      this._category = category;
+      this.retrievedAllProducts = false;
+      this.loadProducts(category);
     }
   }
 
-  addToCart(product: any) {
+  get category(): string {
+    return this._category;
+  }
+
+  loadProducts(category?: string) {
+    if (this.isLoading || this.retrievedAllProducts) return;
+    this.isLoading = true;
+
+    this.productService
+      .getProductsByCategory(
+        category ?? this.category,
+        this.page,
+        this.pageSize
+      )
+      .subscribe((products) => {
+        if (products.products.length === 0) {
+          this.retrievedAllProducts = true;
+          this.isLoading = false;
+          return;
+        }
+        this.products = [...this.products, ...products.products];
+
+        this.page++;
+        this.isLoading = false;
+      });
+  }
+
+  @HostListener('window:scroll', [])
+  onScroll() {
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const threshold = documentHeight - 200;
+
+    if (scrollPosition >= threshold && !this.isLoading) {
+      this.loadProducts();
+    }
+  }
+
+  addToCart(product: Product) {
     this.cartService.addToCart(product);
   }
 
-  increment(product: any) {
+  increment(product: Product) {
     this.cartService.increment(product);
   }
 
-  decrement(product: any) {
+  decrement(product: Product) {
     this.cartService.decrement(product);
   }
 }

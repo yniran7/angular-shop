@@ -2,11 +2,11 @@
 <div class="app-layout">
   <div class="products-container">
     <app-product-list
-      [category]="category"
+      [category]="category()"
     ></app-product-list>
   </div>
   <div class="cart-container">
-    <app-cart [userId]="userId"></app-cart>
+    <app-cart [userId]="userId()"></app-cart>
   </div>
 </div>
 <app-footer [totalProducts]="getTotalProducts()"></app-footer>

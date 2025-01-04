@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ProductService } from '../../services/product.service';
-import { NgFor } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-header',
-  imports: [NgFor, MatToolbarModule],
+  imports: [MatToolbarModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })

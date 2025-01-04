@@ -20,10 +20,12 @@ export class ProductService {
   }
 
   getProductsByCategory(
-    categoryName: string
+    categoryName: string,
+    page: number,
+    pageSize: number
   ): Observable<IGetProductsByCategoryResponse> {
     return this.http.get<IGetProductsByCategoryResponse>(
-      `${this.apiUrl}/products/category?category=${categoryName}`
+      `${this.apiUrl}/products/category?category=${categoryName}&page=${page}&pageSize=${pageSize}`
     );
   }
 
