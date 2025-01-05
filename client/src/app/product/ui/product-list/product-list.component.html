@@ -1,0 +1,9 @@
+<div class="product-list">
+  @for (product of productService.products(); track $index) {
+  <app-product [product]="product"></app-product>
+  } @if (productService.isLoading()){
+  <div class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+  }
+</div>

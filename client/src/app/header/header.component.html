@@ -1,11 +1,5 @@
 <mat-toolbar color="primary">
   <span>Shopping App</span>
   <span class="spacer"></span>
-  <div>
-    @for (category of categories; track $index) {
-    <button mat-raised-button (click)="selectCategory(category)">
-      {{ category }}
-    </button>
-    }
-  </div>
+  <app-category-list></app-category-list>
 </mat-toolbar>

@@ -1,12 +1,10 @@
-<app-header (categorySelected)="updateCategory($event)"></app-header>
+<app-header></app-header>
 <div class="app-layout">
   <div class="products-container">
-    <app-product-list
-      [category]="category()"
-    ></app-product-list>
+    <app-product-list></app-product-list>
   </div>
   <div class="cart-container">
-    <app-cart [userId]="userId()"></app-cart>
+    <app-cart></app-cart>
   </div>
 </div>
-<app-footer [totalProducts]="getTotalProducts()"></app-footer>
+<app-footer [totalProducts]="cartService.getTotalProducts()"></app-footer>

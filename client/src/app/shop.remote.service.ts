@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IGetCategoriesResponse } from '../interfaces/getCategoryResponse';
-import { IGetProductsByCategoryResponse } from '../interfaces/getProductsByCategoryResponse';
-import { IGetCartResponse } from '../interfaces/getCartResponse';
+import { IGetCategoriesResponse } from './interfaces/getCategoryResponse';
+import { IGetProductsByCategoryResponse } from './interfaces/getProductsByCategoryResponse';
+import { IGetCartResponse } from './interfaces/getCartResponse';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductService {
+export class ShopRemoteService {
   private apiUrl = 'http://localhost:5000';
 
   constructor(private http: HttpClient) {}
@@ -36,8 +36,8 @@ export class ProductService {
     );
   }
 
-  getCart(userId: string): Observable<IGetCartResponse[]> {
-    return this.http.get<IGetCartResponse[]>(
+  getCart(userId: string): Observable<IGetCartResponse> {
+    return this.http.get<IGetCartResponse>(
       `${this.apiUrl}/shopping-cart?user_id=${userId}`
     );
   }

@@ -1,69 +1,116 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, switchMap } from 'rxjs';
 import { Product } from '../../models/product';
+import { ShopRemoteService } from '../shop.remote.service';
 
 export interface CartItem extends Product {
-  quantity: number
+  quantity: number;
+}
+
+interface CartState {
+  userId: string;
+  cart: CartItem[];
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private cart = new BehaviorSubject<CartItem[]>([]);
-  cart$ = this.cart.asObservable();
+  private readonly state = signal<CartState>({ userId: 'yuval', cart: [] });
 
-  constructor() {}
+  private readonly shopRemoteService = inject(ShopRemoteService);
+  
+  cart = computed(() => this.state().cart);
+  userId = computed(() => this.state().userId);
+  private loadCart$ = this.shopRemoteService.getCart(this.userId());
 
-  getCart() {
-    return this.cart.getValue();
-  }
+  
+  add$ = new Subject<Product & { quantity?: number }>();
+  decrement$ = new Subject<Product>();
+  removeItem$ = new Subject<Product>();
+  save$ = new Subject<void>();
 
-  addToCart(product: Product, quantity = 1) {
-    const cart = this.getCart();
-    const existingProduct = cart.find((item) => item.name === product.name);
+  constructor() {
+    this.loadCart$.pipe(takeUntilDestroyed()).subscribe(({ products }) => {
+      this.state.update((prevState) => ({ ...prevState, cart: products }));
+    });
 
-    if (existingProduct) {
-      existingProduct.quantity += quantity;
-    } else {
-      cart.push({ ...product, quantity });
-    }
+    this.add$
+      .pipe(takeUntilDestroyed())
+      .subscribe((product: Product & { quantity?: number }) => {
+        this.state.update((prevState) => {
+          const existingProduct = prevState.cart.find(
+            (item) => item.name === product.name
+          );
 
-    this.cart.next(cart);
-  }
+          if (existingProduct) {
+            existingProduct.quantity += product.quantity ?? 1;
+          } else {
+            prevState.cart.push({
+              ...product,
+              quantity: product.quantity ?? 1,
+            });
+          }
 
-  removeFromCart(product: Product): void {
-    let cart = this.getCart();
-    cart = cart.filter((item) => item.name !== product.name);
-    this.cart.next(cart);
-  }
+          return {
+            ...prevState,
+            cart: prevState.cart,
+          };
+        });
+      });
 
-  increment(product: Product): void {
-    const cart = this.getCart();
-    const item = cart.find((p) => p.name === product.name);
-    if (item) item.quantity++;
-    this.cart.next(cart);
-  }
+    this.decrement$.pipe(takeUntilDestroyed()).subscribe((product: Product) => {
+      this.state.update((prevState) => {
+        const item = prevState.cart.find((p) => p.name === product.name);
 
-  decrement(product: Product): void {
-    const cart = this.getCart();
-    const item = cart.find((p) => p.name === product.name);
-    if (item && item.quantity > 1) {
-      item.quantity--;
-    } else if (item && item.quantity === 1) {
-      this.removeFromCart(product);
-    }
-    this.cart.next(cart);
+        if (item && item.quantity > 1) {
+          item.quantity--;
+        } else if (item && item.quantity === 1) {
+          prevState.cart.filter(
+            (currentProduct) => currentProduct.name !== product.name
+          );
+        }
+
+        return {
+          ...prevState,
+          cart: prevState.cart,
+        };
+      });
+    });
+
+    this.removeItem$
+      .pipe(takeUntilDestroyed())
+      .subscribe((product: Product) => {
+        this.state.update((prevState) => ({
+          ...prevState,
+          cart: prevState.cart.filter(
+            (currentProduct) => currentProduct.name !== product.name
+          ),
+        }));
+      });
+
+    this.save$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.shopRemoteService
+        .saveCart(this.cart(), this.userId())
+        .subscribe(() => alert('Cart saved!'));
+    });
   }
 
   getTotal(): number {
-    return this.getCart().reduce(
+    return this.cart().reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
   }
 
   getTotalProducts(): number {
-    return this.getCart().reduce((sum, item) => sum + item.quantity, 0);
+    return this.cart().reduce((sum, item) => sum + item.quantity, 0);
   }
+
+  // saveCart() {
+  //   this.shopRemoteService
+  //     .saveCart(this.cart(), this.userId())
+  //     .subscribe(() => alert('Cart saved!'));
+  // }
 }

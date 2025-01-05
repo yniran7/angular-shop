@@ -1,0 +1,7 @@
+<div>
+  @for (category of categoryService.categories(); track $index) {
+  <button mat-raised-button (click)="categoryService.category$.next(category)">
+    {{ category }}
+  </button>
+  }
+</div>
